@@ -7,40 +7,34 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 })
 export class GamePage implements OnInit {
 
-    @ViewChild('game') game_box: ElementRef;
     @ViewChild('world') world: ElementRef;
     @ViewChild('info_panel') info_panel: ElementRef;
-    @ViewChild('info_generation') info_generation: ElementRef;
-    @ViewChild('info_lifecell') info_lifecell: ElementRef;
-    @ViewChild('info_speed') info_speed: ElementRef;
 
     canvas: any;
-    unitSize = 2;
-    columns = 180;
-    lines = 120;
-    drawRate = 1000 / 16;
-    gridSize = 4;
+
+    unitSize: any;
+    columns: any;
+    lines: any;
+    drawRate: any;
+    gridSize: any;
 
     width: any;
     height: any;
 
-    oldState = [];
-    newState = [];
-    useState = [];
+    oldState: any;
+    newState: any;
+    useState: any;
 
-    gameOn = false;
-    counter = 0;
-    lifeCell = 0;
+    gameOn: boolean;
+    counter: number;
+    lifeCell: number;
 
     ctx: any;
 
     infoPanel: any;
-    infoGeneration: any;
-    infoLifeCell: any;
-    infoSpeed: any;
-
-    gameBox: any;
-    gameBoxSize: {};
+    infoGeneration: number;
+    infoLifeCells: number;
+    infoSpeed: number;
 
     constructor() {
         console.log('GamePage::constructor | ');
@@ -49,9 +43,24 @@ export class GamePage implements OnInit {
     ngOnInit() {
         console.log('GamePage::ngOnInit |');
 
+        this.unitSize = 2;
+        this.columns = 180;
+        this.lines = 120;
+        this.drawRate = 1000 / 16;
+        this.gridSize = 4;
+    
+        this.oldState = [];
+        this.newState = [];
+        this.useState = [];
+    
+        this.gameOn = false;
+        this.counter = 0;
+        this.lifeCell = 0;
+
         /**/
         this.canvas = this.world.nativeElement;
-        console.log('GamePage::ngOnInit | canvas=', this.canvas.width, this.canvas.height, this.canvas);
+        console.log('GamePage::ngOnInit | world =', this.canvas.width, this.canvas.height, this.canvas);
+        console.dir(this.canvas);
 
         this.width = this.canvas.width; // = this.unitSize * this.columns;
         this.height = this.canvas.height; // = this.unitSize * this.lines;
@@ -61,19 +70,9 @@ export class GamePage implements OnInit {
         /**/
         this.ctx = this.canvas.getContext('2d');
 
-        this.infoPanel = this.info_panel.nativeElement;
-
-        this.infoPanel.style.width = this.width - 12 + 'px';
-        this.infoPanel.style.width = this.width - 12 + 'px';
-
-        this.infoGeneration = this.info_generation;
-        this.infoLifeCell = this.info_lifecell;
-        this.infoSpeed = this.info_speed;
-
-        this.gameBox = this.game_box.nativeElement;
-        this.gameBoxSize = {
-            w: this.gameBox.clientWidth, h: this.gameBox.clientHeight
-        };
+        this.infoGeneration = 0;
+        this.infoLifeCells = 0;
+        this.infoSpeed = 0;
 
         this.oldState = [];
         this.newState = [];
@@ -153,9 +152,31 @@ export class GamePage implements OnInit {
         console.log('GamePage::update | counter=', this.counter);
     }
 
-    draw() {
-        // console.log('GamePage::draw | ');
+    start() {
+        console.log('GamePage::start | init()');
+        this.init();
 
+        console.log('GamePage::start | draw()');
+        this.draw();
+
+        console.log('GamePage::start | tick()');
+        setInterval(this.tick, this.drawRate, this);
+    };
+
+    tick(self) {
+        if (self.gameOn) {
+            self.update();
+        }
+
+        self.infoGeneration = self.getGeneration();
+        self.infoLifeCells = self.getLifeCell();
+        self.infoSpeed = self.getSpeed();
+
+        self.draw();
+    };
+
+    draw() {
+        console.log('GamePage::draw | ', this.width, this.height);
         this.lifeCell = 0;
         this.ctx.clearRect(0, 0, this.width, this.height);
 
@@ -196,40 +217,11 @@ export class GamePage implements OnInit {
 
     };
 
-    start() {
-        console.log('GamePage::start | init()');
-        this.init();
-
-        console.log('GamePage::start | draw()');
-        this.draw();
-
-        console.log('GamePage::start | tick()');
-        this.tick(this);
-        setInterval(this.tick, this.drawRate, this);
-    };
-
-    tick(self) {
-        if (self.gameOn) {
-            self.update();
-        }
-
-        self.infoGeneration.innerHTML = self.getGeneration();
-        self.infoLifeCell.innerHTML = self.getLifeCell();
-        self.infoSpeed.innerHTML = self.getSpeed();
-
-        self.draw();
-    };
-
-    next_generation() {
-        this.update();
-        this.tick(this);
-    }
-
     drawGrid() {
         const hLines = this.height / this.unitSize / this.gridSize;
         const wLines = this.width / this.unitSize / this.gridSize;
 
-        // console.log('GamePage::drawGrid | hLine=', hLines, 'wLines=', wLines);
+        console.log('GamePage::drawGrid | hLine=', hLines, 'wLines=', wLines);
 
         for (var i = 0; i < hLines; i++) {
             this.ctx.beginPath();
@@ -277,10 +269,6 @@ export class GamePage implements OnInit {
 
     reset() {
         this.init();
-
-        this.gameOn = false;
-        this.counter = 0;
-        this.lifeCell = 0;
     }
 
     init() {
@@ -297,12 +285,21 @@ export class GamePage implements OnInit {
                 this.useState[i][j] = false;
             }
         }
+
+        this.gameOn = false;
+        this.counter = 0;
+        this.lifeCell = 0;
     }
 
     game_on_off() {
         this.gameOn = !this.gameOn;
         console.log('GamePage::game_on_off | gameOn=', this.gameOn);
     };
+
+    next_generation() {
+        this.update();
+        this.tick(this);
+    }
 
     getWorldSize() {
         const result = {

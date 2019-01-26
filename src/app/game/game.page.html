@@ -1,38 +1,44 @@
 <ion-header>
     <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+
         <ion-title>Game of Live</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-    <div #game id="game">
 
-        <div class="control-panel">
-            <div class="logo-container">
-                <div class="logo"></div>
-            </div>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>Game of Life</ion-card-subtitle>
+        </ion-card-header>
 
-            <button class="ctrl-button" id="btn_start" (click)="game_on_off()">Start</button>
-            <button class="ctrl-button" id="btn_tick" (click)="next_generation()">Tick</button>
-            <button class="ctrl-button" id="btn_create_world" (click)="create_world()">Create World</button>
-            <button class="ctrl-button" id="btn_reset" (click)="reset()">Reset</button>
-        </div>
+        <ion-card-content class="control-panel">
+                <ion-button class="ctrl-button" id="btn_start" (click)="game_on_off()">Start</ion-button>
+                <ion-button class="ctrl-button" id="btn_tick" (click)="next_generation()">Tick</ion-button>
+                <ion-button class="ctrl-button" id="btn_create_world" (click)="create_world()">New</ion-button>
+                <ion-button class="ctrl-button" id="btn_reset" (click)="reset()">Reset</ion-button>
+        </ion-card-content>
 
-        <canvas #world id="world" (click)="addUnit($event)"></canvas>
+        <ion-row>
+            <ion-col align-self-center text-center>
+                <span class="info_generation">Generation: {{ infoGeneration }}</span>
+            </ion-col>
+            <ion-col align-self-center text-center>
+                <span class="info_lifecell">Life cell: {{ infoLifeCells }}</span>
+            </ion-col>
+            <ion-col align-self-center text-center>
+                <span class="info_speed">Speed: {{ infoSpeed }}</span>
+            </ion-col>
+        </ion-row>
 
-        <div #info_panel class="info_panel">
-            <span class="info_generation">Generation: </span>   <span #info_generation>0</span>
+    </ion-card>
 
-            <span class="separator">|</span>
-
-            <span class="info_lifecell">Life cell: </span>      <span #info_lifecell>0</span>
-
-            <span class="separator">|</span>
-
-            <span class="info_speed">Speed: </span>            <span #info_speed>0</span>
-
-            <span>ms</span>
-
-        </div>
-    </div>
+    <ion-card #game id="game">
+        <ion-card-content>
+            <canvas #world id="world" (click)="addUnit($event)"></canvas>
+        </ion-card-content>
+    </ion-card>
 </ion-content>
