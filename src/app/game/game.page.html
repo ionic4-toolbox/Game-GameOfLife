@@ -11,15 +11,11 @@
 <ion-content padding>
 
     <ion-card>
-        <ion-card-header>
-            <ion-card-subtitle>Game of Life</ion-card-subtitle>
-        </ion-card-header>
-
         <ion-card-content class="control-panel">
-                <ion-button class="ctrl-button" id="btn_start" (click)="game_on_off()">Start</ion-button>
-                <ion-button class="ctrl-button" id="btn_tick" (click)="next_generation()">Tick</ion-button>
-                <ion-button class="ctrl-button" id="btn_create_world" (click)="create_world()">New</ion-button>
-                <ion-button class="ctrl-button" id="btn_reset" (click)="reset()">Reset</ion-button>
+            <ion-button class="ctrl-button" id="btn_start" (click)="game_on_off()">{{label_start}}</ion-button>
+            <ion-button class="ctrl-button" id="btn_tick" (click)="next_generation()">Tick</ion-button>
+            <ion-button class="ctrl-button" id="btn_create_world" (click)="create_world()">New</ion-button>
+            <ion-button class="ctrl-button" id="btn_reset" (click)="reset()">Reset</ion-button>
         </ion-card-content>
 
         <ion-row>

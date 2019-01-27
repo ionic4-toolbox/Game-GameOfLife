@@ -8,9 +8,10 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 export class GamePage implements OnInit {
 
     @ViewChild('world') world: ElementRef;
-    @ViewChild('info_panel') info_panel: ElementRef;
 
     canvas: any;
+
+    label_start = "Start";
 
     unitSize: any;
     columns: any;
@@ -176,7 +177,7 @@ export class GamePage implements OnInit {
     };
 
     draw() {
-        console.log('GamePage::draw | ', this.width, this.height);
+        // console.log('GamePage::draw | ', this.width, this.height);
         this.lifeCell = 0;
         this.ctx.clearRect(0, 0, this.width, this.height);
 
@@ -221,7 +222,7 @@ export class GamePage implements OnInit {
         const hLines = this.height / this.unitSize / this.gridSize;
         const wLines = this.width / this.unitSize / this.gridSize;
 
-        console.log('GamePage::drawGrid | hLine=', hLines, 'wLines=', wLines);
+        // console.log('GamePage::drawGrid | hLine=', hLines, 'wLines=', wLines);
 
         for (var i = 0; i < hLines; i++) {
             this.ctx.beginPath();
@@ -293,6 +294,9 @@ export class GamePage implements OnInit {
 
     game_on_off() {
         this.gameOn = !this.gameOn;
+
+        this.label_start = this.gameOn ? "Stop" : "Start";
+
         console.log('GamePage::game_on_off | gameOn=', this.gameOn);
     };
 
